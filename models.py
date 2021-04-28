@@ -11,7 +11,7 @@ def slugify(string):
 
 post_tags = db.Table('post_tags',
                      db.Column('post_id', db.Integer, db.ForeignKey('post.id')),
-                     db.Column('tag.id', db.Integer, db.ForeignKey('tag.id'))
+                     db.Column('tag_id', db.Integer, db.ForeignKey('tag.id'))
                      )
 
 # 'post.id'- путь к свойству айди в таблице пост

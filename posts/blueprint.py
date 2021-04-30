@@ -11,6 +11,10 @@ from flask_security import login_required
 posts = Blueprint('posts', __name__, template_folder='templates')
 
 
+
+#Фласк определяет какую функцию использовать просматривая с верху вниз поэтому нужно быть внимательным что использовать
+
+
 @posts.route('/create', methods=['POST', 'GET'])
 @login_required
 def create_post():
@@ -33,12 +37,12 @@ def create_post():
 @posts.route('/<slug>/edit/', methods=["POST", "GET"])
 @login_required
 def edit_post(slug):
-    post = Post.query.filter(Post.slug==slug).first_or_404()
+    post = Post.query.filter(Post.slug == slug).first_or_404()
     if request.method == "POST":
         form = PostForm(formdata=request.form, obj=post)
-        form.populate_obj(post)
+        form.populate_obj(post) #изменяем сам пост
         # fromdata- это то что передается пользователем через форму
-        # obj- проверяет есть ли у бъекта атрибуты и идет наполнение формы
+        # obj- проверяет есть ли у объекта соответствубщие атрибуты и идет наполнение формы
         db.session.commit()
         return redirect(url_for('posts.post_detail', slug=post.slug))
     form = PostForm(obj=post)
@@ -57,7 +61,8 @@ def index():
         posts = Post.query.filter(Post.title.contains(q) | Post.body.contains(q)) # получаем бейзквери сдесь
     else:
         posts = Post.query.order_by(Post.created.desc())
-    pages = posts.paginate(page=page, per_page=5)
+
+    pages = posts.paginate(page=page, per_page=5) # говорим какую взять страницу по 5 поство
 
     return render_template('posts/index.html', pages=pages)
 
@@ -65,7 +70,7 @@ def index():
 @posts.route('/<slug>')
 def post_detail(slug):
     print('wrong route')
-    post = Post.query.filter(Post.slug==slug).first_or_404()
+    post = Post.query.filter(Post.slug == slug).first_or_404()
     tags = post.tags
     return render_template('posts/post_detail.html', post=post, tags=tags)
 
